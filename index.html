@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Generador gratuito de referencias y citas en formato APA 7, desarrollado por LicitIA Business Academy.">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Generador de citas APA 7 | LicitIA Business Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDE6D6;
+    --paper-line:#C9BFA6;
+    --card:#FBF8F2;
+    --ink:#1B2A4A;
+    --ink-soft:#3C4A68;
+    --stamp:#B23A2E;
+    --sage:#6B7A5E;
+    --muted:#8A8370;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink);
+    min-height:100vh;
+    padding:40px 20px 80px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  .masthead{
+    text-align:center;
+    margin-bottom:32px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:16px;
+  }
+  .masthead h1{
+    font-family:'Special Elite',monospace;
+    font-size:26px;
+    letter-spacing:1px;
+    margin:0 0 6px;
+    color:var(--ink);
+  }
+  .masthead p{
+    margin:0;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  .tabs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2px;
+    margin-bottom:2px;
+  }
+  .tab{
+    padding:10px 6px;
+    text-align:center;
+    font-family:'Special Elite',monospace;
+    font-size:12px;
+    background:var(--paper-line);
+    color:var(--ink);
+    cursor:pointer;
+    border:1px solid var(--ink);
+    opacity:0.55;
+  }
+  .tab.active{
+    background:var(--card);
+    opacity:1;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--ink);
+    padding:24px;
+    margin-bottom:36px;
+    position:relative;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    left:0;right:0;top:38px;
+    height:0;
+    border-top:1px dashed var(--paper-line);
+  }
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .field input{
+    width:100%;
+    padding:8px 10px;
+    font-family:'Source Serif 4',serif;
+    font-size:15px;
+    border:1px solid var(--paper-line);
+    background:#fff;
+    color:var(--ink);
+    border-radius:2px;
+  }
+  .field input:focus{
+    outline:none;
+    border-color:var(--ink);
+  }
+  .field .hint{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  button.generate{
+    font-family:'Special Elite',monospace;
+    font-size:14px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    padding:12px 22px;
+    cursor:pointer;
+    letter-spacing:1px;
+    margin-top:6px;
+  }
+  button.generate:hover{background:var(--ink-soft);}
+  .fichero-title{
+    font-family:'Special Elite',monospace;
+    font-size:14px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .fichero-title span.count{
+    background:var(--sage);
+    color:var(--card);
+    padding:2px 10px;
+    font-size:12px;
+    border-radius:12px;
+  }
+  .ficha{
+    background:var(--card);
+    border:1px solid var(--paper-line);
+    border-left:4px solid var(--sage);
+    padding:18px 20px;
+    margin-bottom:14px;
+    position:relative;
+  }
+  .ficha .tipo{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .ficha .cita-ref{
+    font-family:'Source Serif 4',serif;
+    font-size:15px;
+    line-height:1.55;
+    color:var(--ink);
+    text-indent:-24px;
+    margin-left:24px;
+    margin-bottom:10px;
+  }
+  .ficha .cita-texto{
+    font-family:'Source Serif 4',serif;
+    font-style:italic;
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+  }
+  .ficha .acciones{
+    display:flex;
+    gap:10px;
+  }
+  .ficha .acciones button{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    background:none;
+    border:1px solid var(--paper-line);
+    padding:5px 10px;
+    cursor:pointer;
+    color:var(--ink-soft);
+    border-radius:2px;
+  }
+  .ficha .acciones button:hover{border-color:var(--ink);color:var(--ink);}
+  .sello{
+    position:absolute;
+    top:14px;
+    right:16px;
+    width:52px;
+    height:52px;
+    border:2px solid var(--stamp);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform:rotate(-12deg);
+    color:var(--stamp);
+    font-family:'Special Elite',monospace;
+    font-size:9px;
+    text-align:center;
+    line-height:1.15;
+    letter-spacing:0.5px;
+    opacity:0.85;
+  }
+  .empty{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+    padding:30px 0;
+    border:1px dashed var(--paper-line);
+  }
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--ink);
+    color:var(--paper);
+    padding:9px 18px;
+    border-radius:3px;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    opacity:0;
+    transition:opacity .2s;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1;}
+  .aviso-word{
+    background:var(--card);
+    border:1px dashed var(--paper-line);
+    padding:12px 16px;
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin-bottom:14px;
+  }
+  button.btn-word{
+    font-family:'Special Elite',monospace;
+    font-size:13px;
+    background:var(--sage);
+    color:var(--card);
+    border:none;
+    padding:10px 18px;
+    cursor:pointer;
+    letter-spacing:1px;
+    border-radius:2px;
+    margin-bottom:24px;
+  }
+  button.btn-word:hover{opacity:0.85;}
+
+  .brandbar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin-bottom:18px;padding:10px 0;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Special Elite',monospace;}
+  .brand-mark{width:38px;height:38px;border:2px solid var(--ink);border-radius:8px;display:grid;place-items:center;font-weight:bold;position:relative;background:var(--card);}
+  .brand-mark::after{content:'✓';position:absolute;right:-7px;bottom:-7px;background:var(--sage);color:white;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-family:Arial,sans-serif;font-size:13px;}
+  .brand-text strong{display:block;font-size:15px;letter-spacing:.5px;}
+  .brand-text small{display:block;font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:10px;margin-top:2px;}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  .tool-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--card);color:var(--ink);border:1px solid var(--paper-line);padding:8px 10px;cursor:pointer;border-radius:4px;}
+  .tool-btn:hover{border-color:var(--ink);}
+  .footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--paper-line);text-align:center;color:var(--muted);font-size:11px;line-height:1.6;}
+  .install-hint{display:none;background:var(--card);border-left:4px solid var(--sage);padding:10px 12px;margin:0 0 18px;font-size:11px;color:var(--ink-soft);}
+  .install-hint.show{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  html[data-theme="dark"]{--paper:#111827;--paper-line:#374151;--card:#1F2937;--ink:#F3F4F6;--ink-soft:#D1D5DB;--stamp:#F87171;--sage:#84A98C;--muted:#9CA3AF;}
+  html[data-theme="dark"] .field input{background:#111827;color:var(--ink);}
+  html[data-theme="dark"] .brand-mark{background:#1F2937;}
+  @media(max-width:640px){
+    body{padding:20px 12px 50px}.brandbar{align-items:flex-start}.brand-text small{display:none}.tabs{grid-template-columns:repeat(2,1fr)}.row2,.row3{grid-template-columns:1fr}.card{padding:18px}.masthead h1{font-size:22px}.ficha{padding-right:16px}.sello{display:none}.acciones{flex-wrap:wrap}
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brandbar">
+    <div class="brand" aria-label="LicitIA Business Academy">
+      <div class="brand-mark">IA</div>
+      <div class="brand-text"><strong>LicitIA Business Academy</strong><small>Herramientas para investigar, decidir y publicar mejor</small></div>
+    </div>
+    <div class="toolbar">
+      <button class="tool-btn" id="btn-compartir" type="button">Compartir</button>
+      <button class="tool-btn" id="btn-tema" type="button" aria-label="Cambiar tema">Modo oscuro</button>
+    </div>
+  </div>
+  <div class="install-hint" id="install-hint"><span>Instala esta herramienta para usarla como aplicación.</span><button class="tool-btn" id="btn-instalar" type="button">Instalar</button></div>
+
+
+  <div class="masthead">
+    <h1>generador_citas_apa</h1>
+    <p>Ficha catalográfica · Normas APA 7ª edición</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tipo="web">Sitio web</div>
+    <div class="tab" data-tipo="articulo">Artículo de revista</div>
+    <div class="tab" data-tipo="libro">Libro</div>
+    <div class="tab" data-tipo="capitulo">Capítulo de libro</div>
+    <div class="tab" data-tipo="tesis">Tesis</div>
+    <div class="tab" data-tipo="video">Video (YouTube)</div>
+    <div class="tab" data-tipo="periodico">Periódico</div>
+    <div class="tab" data-tipo="ensayo">Ensayo</div>
+  </div>
+
+  <div class="card">
+    <div id="form-web" class="form-panel">
+      <div class="field">
+        <label>Autor(es)</label>
+        <input type="text" id="web-autor" placeholder="García, M.; López, J.">
+        <div class="hint">Formato: Apellido, Inicial. Separa varios autores con punto y coma.</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="web-anio" placeholder="2026">
+        </div>
+        <div class="field">
+          <label>Fecha completa (opcional)</label>
+          <input type="text" id="web-fecha" placeholder="15 de marzo">
+        </div>
+      </div>
+      <div class="field">
+        <label>Título de la página</label>
+        <input type="text" id="web-titulo" placeholder="Cómo citar en formato APA">
+        <div class="hint">Estilo oración: mayúscula solo en la primera palabra y nombres propios.</div>
+      </div>
+      <div class="field">
+        <label>Nombre del sitio</label>
+        <input type="text" id="web-sitio" placeholder="Scribbr">
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input type="text" id="web-url" placeholder="https://www.ejemplo.com/articulo">
+      </div>
+    </div>
+
+    <div id="form-articulo" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor(es)</label>
+        <input type="text" id="art-autor" placeholder="Hernández, R.; Fernández, C.">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="art-anio" placeholder="2025">
+        </div>
+        <div class="field">
+          <label>Título del artículo</label>
+          <input type="text" id="art-titulo" placeholder="Efectos del sueño en la memoria">
+          <div class="hint">Estilo oración: solo mayúscula inicial y nombres propios.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Título de la revista</label>
+        <input type="text" id="art-revista" placeholder="Revista Latinoamericana de Psicología">
+        <div class="hint">Conserva las mayúsculas oficiales de la revista (title case).</div>
+      </div>
+      <div class="row3">
+        <div class="field">
+          <label>Volumen</label>
+          <input type="text" id="art-vol" placeholder="52">
+        </div>
+        <div class="field">
+          <label>Número</label>
+          <input type="text" id="art-num" placeholder="3">
+        </div>
+        <div class="field">
+          <label>Páginas</label>
+          <input type="text" id="art-pag" placeholder="112-130">
+        </div>
+      </div>
+      <div class="field">
+        <label>DOI o URL (opcional)</label>
+        <input type="text" id="art-doi" placeholder="https://doi.org/10.xxxx/xxxxx">
+      </div>
+    </div>
+
+    <div id="form-libro" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor(es)</label>
+        <input type="text" id="lib-autor" placeholder="Piaget, J.">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="lib-anio" placeholder="1980">
+        </div>
+        <div class="field">
+          <label>Edición (opcional)</label>
+          <input type="text" id="lib-edicion" placeholder="2.ª ed.">
+        </div>
+      </div>
+      <div class="field">
+        <label>Título del libro</label>
+        <input type="text" id="lib-titulo" placeholder="La psicología de la inteligencia">
+      </div>
+      <div class="field">
+        <label>Editorial</label>
+        <input type="text" id="lib-editorial" placeholder="Fondo de Cultura Económica">
+      </div>
+    </div>
+
+    <div id="form-capitulo" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor(es) del capítulo</label>
+        <input type="text" id="cap-autor" placeholder="Vygotsky, L.">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="cap-anio" placeholder="1978">
+        </div>
+        <div class="field">
+          <label>Título del capítulo</label>
+          <input type="text" id="cap-titulo" placeholder="Interacción entre aprendizaje y desarrollo">
+          <div class="hint">Estilo oración: solo mayúscula inicial y nombres propios.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Editor(es) del libro</label>
+        <input type="text" id="cap-editor" placeholder="Cole, M.; John-Steiner, V.">
+        <div class="hint">Formato: Apellido, Inicial. Separa varios con punto y coma.</div>
+      </div>
+      <div class="field">
+        <label>Título del libro</label>
+        <input type="text" id="cap-libro" placeholder="El desarrollo de los procesos psicológicos superiores">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Páginas</label>
+          <input type="text" id="cap-pag" placeholder="79-91">
+        </div>
+        <div class="field">
+          <label>Editorial</label>
+          <input type="text" id="cap-editorial" placeholder="Crítica">
+        </div>
+      </div>
+    </div>
+
+    <div id="form-tesis" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor</label>
+        <input type="text" id="tesis-autor" placeholder="Ramírez, S.">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="tesis-anio" placeholder="2023">
+        </div>
+        <div class="field">
+          <label>Tipo de tesis</label>
+          <input type="text" id="tesis-tipo" placeholder="Tesis de licenciatura / maestría / doctoral">
+        </div>
+      </div>
+      <div class="field">
+        <label>Título</label>
+        <input type="text" id="tesis-titulo" placeholder="Impacto del uso de redes sociales en adolescentes">
+        <div class="hint">Estilo oración: solo mayúscula inicial y nombres propios.</div>
+      </div>
+      <div class="field">
+        <label>Institución</label>
+        <input type="text" id="tesis-institucion" placeholder="Universidad Nacional Autónoma de México">
+      </div>
+      <div class="field">
+        <label>URL o base de datos (opcional, si está publicada)</label>
+        <input type="text" id="tesis-url" placeholder="https://repositorio.ejemplo.edu/...">
+      </div>
+    </div>
+
+    <div id="form-video" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor o canal</label>
+        <input type="text" id="vid-autor" placeholder="TED-Ed">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="vid-anio" placeholder="2024">
+        </div>
+        <div class="field">
+          <label>Fecha completa (opcional)</label>
+          <input type="text" id="vid-fecha" placeholder="8 de mayo">
+        </div>
+      </div>
+      <div class="field">
+        <label>Título del video</label>
+        <input type="text" id="vid-titulo" placeholder="Cómo funciona la memoria">
+        <div class="hint">Estilo oración: solo mayúscula inicial y nombres propios.</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Plataforma</label>
+          <input type="text" id="vid-plataforma" placeholder="YouTube">
+        </div>
+        <div class="field">
+          <label>URL</label>
+          <input type="text" id="vid-url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+      </div>
+    </div>
+
+    <div id="form-periodico" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor(es)</label>
+        <input type="text" id="per-autor" placeholder="Domínguez, A.">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Año</label>
+          <input type="text" id="per-anio" placeholder="2026">
+        </div>
+        <div class="field">
+          <label>Fecha completa (opcional)</label>
+          <input type="text" id="per-fecha" placeholder="10 de julio">
+        </div>
+      </div>
+      <div class="field">
+        <label>Título del artículo</label>
+        <input type="text" id="per-titulo" placeholder="Nuevas medidas educativas entran en vigor">
+        <div class="hint">Estilo oración: solo mayúscula inicial y nombres propios.</div>
+      </div>
+      <div class="field">
+        <label>Nombre del periódico</label>
+        <input type="text" id="per-nombre" placeholder="El País">
+        <div class="hint">Conserva las mayúsculas oficiales del periódico (title case).</div>
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input type="text" id="per-url" placeholder="https://elpais.com/...">
+      </div>
+    </div>
+
+    <div id="form-ensayo" class="form-panel" style="display:none;">
+      <div class="field">
+        <label>Autor(es)</label>
+        <input type="text" id="ens-autor" placeholder="Fuentes, C.">
+      </div>
+      <div class="field">
+        <label>Año</label>
+        <input type="text" id="ens-anio" placeholder="2001">
+      </div>
+      <div class="field">
+        <label>Título del ensayo</label>
+        <input type="text" id="ens-titulo" placeholder="En esto creo">
+        <div class="hint">Estilo oración: solo mayúscula inicial y nombres propios.</div>
+      </div>
+      <div class="field">
+        <label>Publicado en (revista, sitio o compilación)</label>
+        <input type="text" id="ens-publicacion" placeholder="Letras Libres">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Páginas (opcional)</label>
+          <input type="text" id="ens-paginas" placeholder="12-20">
+        </div>
+        <div class="field">
+          <label>URL o DOI (opcional)</label>
+          <input type="text" id="ens-url" placeholder="https://...">
+        </div>
+      </div>
+    </div>
+
+    <button class="generate" id="btn-generar">+ Generar ficha</button>
+  </div>
+
+  <div class="fichero-title">
+    Fichero de referencias
+    <span class="count" id="contador">0</span>
+  </div>
+
+  <div class="aviso-word">
+    Word (Microsoft) solo trae integrado el estilo APA hasta la 6.ª edición, por eso no aplica bien varias reglas de la 7.ª (como las cursivas correctas o "et al." desde el tercer autor). Con este botón exportas tu fichero completo, ya ordenado alfabéticamente, con sangría francesa y cursivas, directo a un documento de Word.
+  </div>
+  <button class="btn-word" id="btn-exportar-word">⇩ Exportar fichero a Word (.doc)</button>
+
+  <div id="lista-fichas">
+    <div class="empty" id="vacio">Aún no hay citas generadas. Completa el formulario de arriba.</div>
+  </div>
+
+  <div class="footer">
+    Herramienta educativa gratuita · APA 7.ª edición · LicitIA Business Academy<br>
+    Verifica siempre los datos de la fuente original antes de entregar un trabajo académico.
+  </div>
+</div>
+
+<div class="toast" id="toast">Copiado al portapapeles</div>
+
+<script>
+let tipoActivo = 'web';
+let citas = [];
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    tipoActivo = tab.dataset.tipo;
+    document.querySelectorAll('.form-panel').forEach(p=>p.style.display='none');
+    document.getElementById('form-'+tipoActivo).style.display='block';
+  });
+});
+
+function parseAutores(str){
+  return str.split(';').map(s=>s.trim()).filter(Boolean);
+}
+
+function formatoAutoresReferencia(autores){
+  // APA 7: en la lista de referencias siempre va coma antes del &,
+  // incluso con solo dos autores. Ej.: "Smith, J. A., & Jones, K. B."
+  if(autores.length===0) return '';
+  if(autores.length===1) return autores[0];
+  if(autores.length===2) return autores[0] + ', & ' + autores[1];
+  return autores.slice(0,-1).join(', ') + ', & ' + autores[autores.length-1];
+}
+
+function apellido(autorStr){
+  return autorStr.split(',')[0].trim();
+}
+
+function formatoAutoresEnTexto(autores){
+  // APA 7: cita en texto con "&" (sin coma) para 2 autores; a partir de
+  // 3 autores se usa "et al." desde la primera cita, no solo desde la segunda.
+  const apellidos = autores.map(apellido);
+  if(apellidos.length===0) return '';
+  if(apellidos.length===1) return apellidos[0];
+  if(apellidos.length===2) return apellidos[0] + ' & ' + apellidos[1];
+  return apellidos[0] + ' et al.';
+}
+
+function autorConPunto(autoresRef){
+  // Asegura exactamente un punto entre el bloque de autor(es) y el
+  // paréntesis del año. Si el autor ya termina en punto (p. ej. "M."
+  // de una inicial), no se duplica; si es un nombre de organización o
+  // canal sin punto final, se agrega uno.
+  if(!autoresRef) return '';
+  const limpio = autoresRef.replace(/\s+$/, '');
+  return (/\.$/.test(limpio) ? limpio : limpio + '.') + ' ';
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.innerText = s;
+  return d.innerHTML;
+}
+
+// Construye la cadena "referencia" a partir de segmentos {t, i} donde
+// i=true marca el fragmento en cursiva. Así referencia (texto plano) y
+// segmentos (para el export a Word con cursivas reales) nunca se
+// desincronizan: uno se deriva del otro.
+function unirSegmentos(segmentos){
+  return segmentos.map(s=>s.t).join('');
+}
+
+// Clave para alfabetizar el fichero de referencias, como exige APA:
+// apellido del primer autor, o si no hay autor, la primera palabra
+// significativa del título (ignorando artículos).
+function claveOrden(autores, titulo){
+  if(autores && autores.length) return apellido(autores[0]).toLowerCase();
+  const stop = ['el','la','los','las','un','una','the','a','an'];
+  const palabras = (titulo||'').trim().split(/\s+/);
+  let i = 0;
+  while(i < palabras.length-1 && stop.includes(palabras[i].toLowerCase())) i++;
+  return (palabras[i]||'').toLowerCase();
+}
+
+function generarWeb(){
+  const autor = document.getElementById('web-autor').value.trim();
+  const anio = document.getElementById('web-anio').value.trim();
+  const fecha = document.getElementById('web-fecha').value.trim();
+  const titulo = document.getElementById('web-titulo').value.trim();
+  const sitio = document.getElementById('web-sitio').value.trim();
+  const url = document.getElementById('web-url').value.trim();
+
+  if(!titulo || !url){
+    alert('Completa al menos el título y la URL.');
+    return;
+  }
+
+  const autores = autor ? parseAutores(autor) : [];
+  const fechaRef = fecha ? `${anio||'s.f.'}, ${fecha}` : (anio || 's.f.');
+  const sitioRef = sitio ? `${sitio}. ` : '';
+
+  let segmentos, enTexto;
+  if(autores.length){
+    const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+    // El título de una página independiente sí lleva cursiva en APA 7;
+    // el nombre del sitio (contenedor) no.
+    segmentos = [
+      {t:autoresRef, i:false},
+      {t:`(${fechaRef}). `, i:false},
+      {t:titulo, i:true},
+      {t:`. ${sitioRef}${url}`, i:false}
+    ];
+    enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+  } else {
+    // APA 7: sin autor individual, el título de la página ocupa el
+    // lugar del autor y la fecha pasa después.
+    segmentos = [
+      {t:titulo, i:true},
+      {t:`. (${fechaRef}). ${sitioRef}${url}`, i:false}
+    ];
+    const corto = titulo.split(' ').slice(0,4).join(' ');
+    enTexto = `("${corto}", ${anio||'s.f.'})`;
+  }
+
+  return {tipo:'Sitio web', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+function generarArticulo(){
+  const autor = document.getElementById('art-autor').value.trim();
+  const anio = document.getElementById('art-anio').value.trim();
+  const titulo = document.getElementById('art-titulo').value.trim();
+  const revista = document.getElementById('art-revista').value.trim();
+  const vol = document.getElementById('art-vol').value.trim();
+  const num = document.getElementById('art-num').value.trim();
+  const pag = document.getElementById('art-pag').value.trim();
+  const doi = document.getElementById('art-doi').value.trim();
+
+  if(!autor || !titulo || !revista){
+    alert('Completa al menos autor, título y revista.');
+    return;
+  }
+
+  const autores = parseAutores(autor);
+  const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+
+  // APA 7: se itálica el nombre de la revista y el volumen, pero NO el
+  // número (va entre paréntesis sin cursiva) ni las páginas.
+  const revistaVol = vol ? `${revista}, ${vol}` : revista;
+  const numPag = `${num ? `(${num})` : ''}${pag ? `, ${pag}` : ''}`;
+
+  const segmentos = [
+    {t:autoresRef, i:false},
+    {t:`(${anio||'s.f.'}). `, i:false},
+    {t:`${titulo}. `, i:false},
+    {t:revistaVol, i:true},
+    {t:`${numPag}.${doi ? ' ' + doi : ''}`, i:false}
+  ];
+  const enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+
+  return {tipo:'Artículo de revista', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+function generarLibro(){
+  const autor = document.getElementById('lib-autor').value.trim();
+  const anio = document.getElementById('lib-anio').value.trim();
+  const edicion = document.getElementById('lib-edicion').value.trim();
+  const titulo = document.getElementById('lib-titulo').value.trim();
+  const editorial = document.getElementById('lib-editorial').value.trim();
+
+  if(!autor || !titulo || !editorial){
+    alert('Completa al menos autor, título y editorial.');
+    return;
+  }
+
+  const autores = parseAutores(autor);
+  const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+
+  // APA 7: el título del libro va en cursiva; "(edición)" NO va en
+  // cursiva aunque quede pegado al título.
+  const segmentos = [
+    {t:autoresRef, i:false},
+    {t:`(${anio||'s.f.'}). `, i:false},
+    {t:titulo, i:true},
+    {t:`${edicion ? ` (${edicion})` : ''}. ${editorial}.`, i:false}
+  ];
+  const enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+
+  return {tipo:'Libro', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+function formatoEditoresConEd(autores){
+  if(autores.length===0) return '';
+  const lista = formatoAutoresReferencia(autores);
+  const etiqueta = autores.length>1 ? 'Eds.' : 'Ed.';
+  return `${lista} (${etiqueta})`;
+}
+
+function generarCapitulo(){
+  const autor = document.getElementById('cap-autor').value.trim();
+  const anio = document.getElementById('cap-anio').value.trim();
+  const titulo = document.getElementById('cap-titulo').value.trim();
+  const editor = document.getElementById('cap-editor').value.trim();
+  const libro = document.getElementById('cap-libro').value.trim();
+  const pag = document.getElementById('cap-pag').value.trim();
+  const editorial = document.getElementById('cap-editorial').value.trim();
+
+  if(!autor || !titulo || !editor || !libro || !editorial){
+    alert('Completa autor, título del capítulo, editor(es) del libro, título del libro y editorial. El editor es obligatorio en APA para citar un capítulo.');
+    return;
+  }
+
+  const autores = parseAutores(autor);
+  const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+  const editores = parseAutores(editor);
+  const editoresRef = `En ${formatoEditoresConEd(editores)}, `;
+
+  // APA 7: el título del libro (contenedor) va en cursiva; el título
+  // del capítulo NO.
+  const segmentos = [
+    {t:autoresRef, i:false},
+    {t:`(${anio||'s.f.'}). `, i:false},
+    {t:`${titulo}. `, i:false},
+    {t:editoresRef, i:false},
+    {t:libro, i:true},
+    {t:`${pag ? ` (pp. ${pag})` : ''}. ${editorial}.`, i:false}
+  ];
+  const enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+
+  return {tipo:'Capítulo de libro', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+function generarTesis(){
+  const autor = document.getElementById('tesis-autor').value.trim();
+  const anio = document.getElementById('tesis-anio').value.trim();
+  const tipo = document.getElementById('tesis-tipo').value.trim() || 'Tesis';
+  const titulo = document.getElementById('tesis-titulo').value.trim();
+  const institucion = document.getElementById('tesis-institucion').value.trim();
+  const url = document.getElementById('tesis-url').value.trim();
+
+  if(!autor || !titulo || !institucion){
+    alert('Completa al menos autor, título e institución.');
+    return;
+  }
+
+  const autores = parseAutores(autor);
+  const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+
+  // APA 7 distingue dos formatos según si la tesis está publicada
+  // (con URL/base de datos, la institución va dentro del corchete) o
+  // no publicada (la institución va después, no dentro del corchete).
+  // El título de la tesis va en cursiva en ambos casos.
+  const cola = url
+    ? ` [${tipo}, ${institucion}]. ${url}`
+    : ` [${tipo} no publicada]. ${institucion}.`;
+  const segmentos = [
+    {t:autoresRef, i:false},
+    {t:`(${anio||'s.f.'}). `, i:false},
+    {t:titulo, i:true},
+    {t:cola, i:false}
+  ];
+  const enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+
+  return {tipo:'Tesis o disertación', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+function generarVideo(){
+  const autor = document.getElementById('vid-autor').value.trim();
+  const anio = document.getElementById('vid-anio').value.trim();
+  const fecha = document.getElementById('vid-fecha').value.trim();
+  const titulo = document.getElementById('vid-titulo').value.trim();
+  const plataforma = document.getElementById('vid-plataforma').value.trim() || 'YouTube';
+  const url = document.getElementById('vid-url').value.trim();
+
+  if(!autor || !titulo || !url){
+    alert('Completa al menos autor/canal, título y URL.');
+    return;
+  }
+
+  const fechaRef = fecha ? `${anio||'s.f.'}, ${fecha}` : (anio || 's.f.');
+  const autores = parseAutores(autor);
+  const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+
+  // APA 7: el título del video (obra independiente) va en cursiva.
+  const segmentos = [
+    {t:autoresRef, i:false},
+    {t:`(${fechaRef}). `, i:false},
+    {t:titulo, i:true},
+    {t:` [Video]. ${plataforma}. ${url}`, i:false}
+  ];
+  const nombreEnTexto = autor.includes(',') ? apellido(autor) : autor;
+  const enTexto = `(${nombreEnTexto}, ${anio||'s.f.'})`;
+
+  return {tipo:'Video (YouTube)', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave: autor.includes(',') ? apellido(autor).toLowerCase() : autor.toLowerCase()};
+}
+
+function generarPeriodico(){
+  const autor = document.getElementById('per-autor').value.trim();
+  const anio = document.getElementById('per-anio').value.trim();
+  const fecha = document.getElementById('per-fecha').value.trim();
+  const titulo = document.getElementById('per-titulo').value.trim();
+  const nombre = document.getElementById('per-nombre').value.trim();
+  const url = document.getElementById('per-url').value.trim();
+
+  if(!titulo || !nombre){
+    alert('Completa al menos el título del artículo y el nombre del periódico.');
+    return;
+  }
+
+  const autores = autor ? parseAutores(autor) : [];
+  const fechaRef = fecha ? `${anio||'s.f.'}, ${fecha}` : (anio || 's.f.');
+  const cola = `.${url ? ' ' + url : ''}`;
+
+  // APA 7: el nombre del periódico (contenedor) va en cursiva; el
+  // título de la nota NO, tenga o no autor.
+  let segmentos, enTexto;
+  if(autores.length){
+    const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+    segmentos = [
+      {t:autoresRef, i:false},
+      {t:`(${fechaRef}). `, i:false},
+      {t:`${titulo}. `, i:false},
+      {t:nombre, i:true},
+      {t:cola, i:false}
+    ];
+    enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+  } else {
+    // APA 7: sin autor, el título de la nota va en el lugar del autor.
+    segmentos = [
+      {t:`${titulo}. (${fechaRef}). `, i:false},
+      {t:nombre, i:true},
+      {t:cola, i:false}
+    ];
+    const corto = titulo.split(' ').slice(0,4).join(' ');
+    enTexto = `("${corto}", ${anio||'s.f.'})`;
+  }
+
+  return {tipo:'Periódico / noticia en línea', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+function generarEnsayo(){
+  const autor = document.getElementById('ens-autor').value.trim();
+  const anio = document.getElementById('ens-anio').value.trim();
+  const titulo = document.getElementById('ens-titulo').value.trim();
+  const publicacion = document.getElementById('ens-publicacion').value.trim();
+  const pag = document.getElementById('ens-paginas').value.trim();
+  const url = document.getElementById('ens-url').value.trim();
+
+  if(!autor || !titulo || !publicacion){
+    alert('Completa al menos autor, título y dónde fue publicado.');
+    return;
+  }
+
+  const autores = parseAutores(autor);
+  const autoresRef = autorConPunto(formatoAutoresReferencia(autores));
+
+  // APA 7: la publicación que aloja el ensayo (contenedor) va en
+  // cursiva; el título del ensayo NO.
+  const segmentos = [
+    {t:autoresRef, i:false},
+    {t:`(${anio||'s.f.'}). `, i:false},
+    {t:`${titulo}. `, i:false},
+    {t:publicacion, i:true},
+    {t:`${pag ? `, pp. ${pag}` : ''}.${url ? ' ' + url : ''}`, i:false}
+  ];
+  const enTexto = `(${formatoAutoresEnTexto(autores)}, ${anio||'s.f.'})`;
+
+  return {tipo:'Ensayo', referencia:unirSegmentos(segmentos), segmentos, enTexto, clave:claveOrden(autores, titulo)};
+}
+
+document.getElementById('btn-generar').addEventListener('click', ()=>{
+  let resultado;
+  if(tipoActivo==='web') resultado = generarWeb();
+  else if(tipoActivo==='articulo') resultado = generarArticulo();
+  else if(tipoActivo==='libro') resultado = generarLibro();
+  else if(tipoActivo==='capitulo') resultado = generarCapitulo();
+  else if(tipoActivo==='tesis') resultado = generarTesis();
+  else if(tipoActivo==='video') resultado = generarVideo();
+  else if(tipoActivo==='periodico') resultado = generarPeriodico();
+  else resultado = generarEnsayo();
+
+  if(!resultado) return;
+  citas.unshift(resultado);
+  renderFichas();
+});
+
+function construirHtmlWord(citasOrdenadas){
+  const cuerpo = citasOrdenadas.map(c=>{
+    const partes = c.segmentos.map(s => s.i ? `<i>${escapeHtml(s.t)}</i>` : escapeHtml(s.t)).join('');
+    // Sangría francesa (0.5"): primera línea al margen, el resto sangrado.
+    return `<p style="margin:0 0 12pt 0.5in;text-indent:-0.5in;line-height:2;font-family:'Times New Roman',serif;font-size:12pt;">${partes}</p>`;
+  }).join('\n');
+
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Generador gratuito de referencias y citas en formato APA 7, desarrollado por LicitIA Business Academy.">
+<meta name="theme-color" content="#1B2A4A">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Referencias APA 7</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->
+<style>
+  @page{ size:8.5in 11in; margin:1in; }
+  body{ font-family:'Times New Roman',serif; font-size:12pt; }
+
+  .brandbar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin-bottom:18px;padding:10px 0;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Special Elite',monospace;}
+  .brand-mark{width:38px;height:38px;border:2px solid var(--ink);border-radius:8px;display:grid;place-items:center;font-weight:bold;position:relative;background:var(--card);}
+  .brand-mark::after{content:'✓';position:absolute;right:-7px;bottom:-7px;background:var(--sage);color:white;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-family:Arial,sans-serif;font-size:13px;}
+  .brand-text strong{display:block;font-size:15px;letter-spacing:.5px;}
+  .brand-text small{display:block;font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:10px;margin-top:2px;}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  .tool-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--card);color:var(--ink);border:1px solid var(--paper-line);padding:8px 10px;cursor:pointer;border-radius:4px;}
+  .tool-btn:hover{border-color:var(--ink);}
+  .footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--paper-line);text-align:center;color:var(--muted);font-size:11px;line-height:1.6;}
+  .install-hint{display:none;background:var(--card);border-left:4px solid var(--sage);padding:10px 12px;margin:0 0 18px;font-size:11px;color:var(--ink-soft);}
+  .install-hint.show{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  html[data-theme="dark"]{--paper:#111827;--paper-line:#374151;--card:#1F2937;--ink:#F3F4F6;--ink-soft:#D1D5DB;--stamp:#F87171;--sage:#84A98C;--muted:#9CA3AF;}
+  html[data-theme="dark"] .field input{background:#111827;color:var(--ink);}
+  html[data-theme="dark"] .brand-mark{background:#1F2937;}
+  @media(max-width:640px){
+    body{padding:20px 12px 50px}.brandbar{align-items:flex-start}.brand-text small{display:none}.tabs{grid-template-columns:repeat(2,1fr)}.row2,.row3{grid-template-columns:1fr}.card{padding:18px}.masthead h1{font-size:22px}.ficha{padding-right:16px}.sello{display:none}.acciones{flex-wrap:wrap}
+  }
+
+</style>
+</head>
+<body>
+<p style="text-align:center;font-weight:bold;font-family:'Times New Roman',serif;font-size:12pt;margin:0 0 24pt 0;">Referencias</p>
+${cuerpo}
+</body>
+</html>`;
+}
+
+function exportarWord(){
+  if(citas.length===0){
+    alert('Primero genera al menos una ficha para poder exportar.');
+    return;
+  }
+  const ordenadas = [...citas].sort((a,b)=> a.clave.localeCompare(b.clave, 'es'));
+  const html = construirHtmlWord(ordenadas);
+  const blob = new Blob(['﻿', html], {type:'application/msword'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Referencias_APA7.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('btn-exportar-word').addEventListener('click', exportarWord);
+
+function renderFichas(){
+  const lista = document.getElementById('lista-fichas');
+  const vacio = document.getElementById('vacio');
+  document.getElementById('contador').innerText = citas.length;
+
+  if(citas.length===0){
+    lista.innerHTML = '';
+    lista.appendChild(vacio);
+    return;
+  }
+
+  lista.innerHTML = citas.map((c,i)=>`
+    <div class="ficha">
+      <div class="sello">&#10003;<br>APA 7</div>
+      <div class="tipo">${c.tipo}</div>
+      <div class="cita-ref">${escapeHtml(c.referencia)}</div>
+      <div class="cita-texto">Cita en texto: ${escapeHtml(c.enTexto)}</div>
+      <div class="acciones">
+        <button onclick="copiar(${i}, 'referencia')">Copiar referencia</button>
+        <button onclick="copiar(${i}, 'enTexto')">Copiar cita en texto</button>
+        <button onclick="eliminar(${i})">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function copiar(i, campo){
+  const texto = citas[i][campo];
+  navigator.clipboard.writeText(texto).then(()=>{
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 1400);
+  });
+}
+
+function eliminar(i){
+  citas.splice(i,1);
+  renderFichas();
+}
+
+
+// Tema claro/oscuro
+const temaGuardado = localStorage.getItem('tema-licitia');
+if(temaGuardado) document.documentElement.dataset.theme = temaGuardado;
+function actualizarTextoTema(){
+  document.getElementById('btn-tema').textContent = document.documentElement.dataset.theme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+}
+actualizarTextoTema();
+document.getElementById('btn-tema').addEventListener('click', ()=>{
+  const nuevo = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = nuevo;
+  localStorage.setItem('tema-licitia', nuevo);
+  actualizarTextoTema();
+});
+
+// Compartir o copiar enlace
+document.getElementById('btn-compartir').addEventListener('click', async ()=>{
+  const data = {title:document.title, text:'Generador gratuito de referencias APA 7', url:location.href};
+  try{
+    if(navigator.share) await navigator.share(data);
+    else { await navigator.clipboard.writeText(location.href); mostrarToast('Enlace copiado'); }
+  }catch(e){ if(e.name !== 'AbortError') mostrarToast('No fue posible compartir'); }
+});
+function mostrarToast(texto){
+  const toast=document.getElementById('toast');
+  toast.textContent=texto;toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),1400);
+}
+
+// PWA instalable
+let deferredPrompt;
+const installHint=document.getElementById('install-hint');
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();deferredPrompt=e;installHint.classList.add('show');
+});
+document.getElementById('btn-instalar').addEventListener('click', async ()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installHint.classList.remove('show');
+});
+window.addEventListener('appinstalled', ()=>installHint.classList.remove('show'));
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+
+</script>
+</body>
+</html>
